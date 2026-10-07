@@ -4,14 +4,14 @@ import { esc, button, callButton, sectionHeading, contactList, ctaBand } from ".
 export const page = {
   path: "/",
   title: "Home",
-  description: "AE Logistics provides professional medical courier, specimen transportation, STAT, scheduled route, and same-day business delivery services throughout Detroit and Metro Detroit, Michigan.",
+  description: "Detroit medical courier and delivery service. AE Logistics provides specimen transport, STAT delivery, scheduled clinic-to-lab routes, and same-day business delivery across Metro Detroit, Michigan.",
   body: () => `
     <section id="home" class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Medical courier &amp; business logistics · Metro Detroit</p>
           <h1 id="hero-title">Reliable delivery <span>when timing matters.</span></h1>
-          <p class="hero-description">Professional medical courier and logistics solutions for healthcare organizations and local businesses serving Detroit and Metro Detroit.</p>
+          <p class="hero-description">Professional medical courier, specimen transport, and healthcare logistics for medical offices, laboratories, pharmacies, and local businesses across Detroit and Metro Detroit, Michigan.</p>
           <p class="tagline">${esc(BUSINESS.tagline)}</p>
           <div class="button-row">
             ${button("/request-service/", "Request Service")}

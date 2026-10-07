@@ -1,10 +1,11 @@
-import { INDUSTRIES } from "../content.mjs";
+import { INDUSTRIES, SERVICES } from "../content.mjs";
 import { esc, button, pageHero, ctaBand } from "../layout.mjs";
 
 export const page = {
   path: "/industries/",
   title: "Industries",
-  description: "AE Logistics supports healthcare organizations, laboratories, medical and dental offices, pharmacies, and professional businesses across Metro Detroit with dependable courier service.",
+  seoTitle: "Healthcare, Lab & Business Courier Service in Detroit | AE Logistics",
+  description: "Courier and healthcare logistics support for hospitals, laboratories, medical and dental offices, pharmacies, and professional businesses across Detroit and Metro Detroit, Michigan.",
   body: () => `
 ${pageHero({
   eyebrow: "Industries",
@@ -18,6 +19,10 @@ ${pageHero({
           <article id="${industry.slug}" class="industry-card">
             <h2>${esc(industry.name)}</h2>
             <p>${esc(industry.description)}</p>
+            ${(() => {
+              const service = SERVICES.find((item) => item.slug === industry.relatedService);
+              return service ? `<p class="related-link"><a href="/services/#${service.slug}">Related service: ${esc(service.name)} <span aria-hidden="true">→</span></a></p>` : "";
+            })()}
           </article>`).join("")}
         </div>
       </div>

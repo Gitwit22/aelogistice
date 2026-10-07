@@ -4,6 +4,7 @@ import { BUSINESS } from "../content.mjs";
 export const page = {
   path: "/request-service/",
   title: "Request Service",
+  seoTitle: "Request Courier Service in Detroit & Metro Detroit | AE Logistics",
   description: "Request courier service from AE Logistics — medical courier, specimen transportation, STAT, scheduled routes, and same-day business delivery in Metro Detroit.",
   body: () => `
 ${pageHero({
@@ -11,7 +12,8 @@ ${pageHero({
   title: "Tell us what needs to move.",
   text: "Send your delivery details and our team will follow up to confirm routing, timing, and handling requirements."
 })}
-    <section class="section tinted" aria-label="Service request form">
+    <section class="section tinted" aria-labelledby="request-form-title">
+      <h2 id="request-form-title" class="visually-hidden">Service request form</h2>
       <div class="container form-layout">
         <div class="form-aside">
           <h2>Before you submit</h2>

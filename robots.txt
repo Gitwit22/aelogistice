@@ -1,4 +1,8 @@
+# Public marketing pages are crawlable. robots.txt is not access control —
+# private areas must be protected by authentication.
 User-agent: *
 Allow: /
+# Reserved for the future employee/operations portal.
+Disallow: /portal/
 
 Sitemap: https://aelogistics.nxtlvlts.com/sitemap.xml

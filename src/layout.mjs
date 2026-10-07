@@ -1,6 +1,7 @@
 // Shared layout, components, and HTML helpers used by every page.
 import { BUSINESS, NAV, FORM_ENDPOINTS, SERVICES, OTHER_SERVICE_OPTION } from "./content.mjs";
 import { FORMS } from "../assets/js/forms.js";
+import { seoHead, structuredData } from "./seo.mjs";
 
 const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 export const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ESCAPES[char]);
@@ -131,25 +132,6 @@ export const renderForm = (formType, { intro = "" } = {}) => {
 
 /* ---------- Page shell ---------- */
 
-const structuredData = () => {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: BUSINESS.legalName,
-    alternateName: [BUSINESS.name, BUSINESS.brandName],
-    url: `${BUSINESS.siteUrl}/`,
-    logo: `${BUSINESS.siteUrl}/assets/img/logo-primary.png`,
-    image: `${BUSINESS.siteUrl}/assets/img/og-image.jpg`,
-    slogan: BUSINESS.tagline,
-    telephone: `+1-${BUSINESS.phone}`,
-    email: BUSINESS.email,
-    areaServed: BUSINESS.serviceArea
-  };
-  if (BUSINESS.hours) data.description = `Business hours: ${BUSINESS.hours}`;
-  // Escape "<" so content can never close the script element.
-  return JSON.stringify(data).replace(/</g, "\\u003c");
-};
-
 const header = (path) => {
   const links = NAV.map((item) => {
     const current = item.href === path ? ' aria-current="page"' : "";
@@ -213,31 +195,22 @@ const footer = () => {
   </footer>`;
 };
 
-export const renderPage = ({ path, title, description, body, noindex = false }) => {
-  const canonical = `${BUSINESS.siteUrl}${path}`;
-  const fullTitle = path === "/" ? `${BUSINESS.name} | Medical Courier & Business Delivery in Detroit` : `${title} | ${BUSINESS.name}`;
+export const renderPage = (page) => {
+  const { path, body } = page;
   return `<!doctype html>
-<html lang="en">
+<html lang="en-US">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#062A4A">
-  <title>${esc(fullTitle)}</title>
-  <meta name="description" content="${esc(description)}">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="${esc(BUSINESS.name)}">
-  <meta property="og:title" content="${esc(fullTitle)}">
-  <meta property="og:description" content="${esc(description)}">
-  <meta property="og:url" content="${canonical}">
-  <meta property="og:image" content="${BUSINESS.siteUrl}/assets/img/og-image.jpg">
-  <meta property="og:image:alt" content="${esc(BUSINESS.brandName)} logo">
-${noindex ? '  <meta name="robots" content="noindex">\n' : `  <link rel="canonical" href="${canonical}">\n`}  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+${seoHead(page)}
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/styles.css">
   <script type="module" src="/assets/js/main.js"></script>
-  <script type="application/ld+json">${structuredData()}</script>
+  <script type="application/ld+json">${structuredData(page)}</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>${header(path)}

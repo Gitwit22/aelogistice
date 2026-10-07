@@ -1,15 +1,19 @@
-import { SERVICES } from "../content.mjs";
-import { esc, button, pageHero, requestServiceHref, ctaBand, callButton } from "../layout.mjs";
+import { SERVICES, SERVICE_FAQS } from "../content.mjs";
+import { esc, button, pageHero, requestServiceHref, ctaBand, callButton, sectionHeading } from "../layout.mjs";
+import { serviceNodes, faqNode } from "../seo.mjs";
 
 export const page = {
   path: "/services/",
   title: "Services",
-  description: "Medical courier services, specimen transportation, STAT and on-demand delivery, scheduled routes, same-day business delivery, and dedicated courier solutions in Metro Detroit.",
+  seoTitle: "Medical Courier & Delivery Services in Metro Detroit | AE Logistics",
+  breadcrumb: "Services",
+  schema: (url) => [...serviceNodes(), faqNode(SERVICE_FAQS, url)],
+  description: "Medical courier services, clinic-to-lab specimen transport, STAT delivery, scheduled courier routes, same-day business delivery, and dedicated courier solutions in Detroit and Metro Detroit, MI.",
   body: () => `
 ${pageHero({
   eyebrow: "Services",
   title: "Courier and logistics services for healthcare and business.",
-  text: "Scheduled, recurring, same-day, and priority delivery options across Detroit and Metro Detroit. Contact us for a quote tailored to your needs.",
+  text: "Medical courier, specimen transport, and business delivery across Detroit and Metro Detroit — scheduled, recurring, same-day, and STAT options with documented chain-of-custody handoffs. Contact us for a quote tailored to your needs.",
   actions: `${button("/request-service/", "Request Service")}${callButton()}`
 })}
     <nav class="section jump-nav" aria-label="Services on this page">
@@ -34,10 +38,12 @@ ${pageHero({
         </div>
       </section>`).join("")}
     </div>
-    <section class="section" aria-labelledby="pricing-title">
+    <section class="section" aria-labelledby="faq-title">
       <div class="container narrow">
-        <h2 id="pricing-title">Pricing</h2>
-        <p>Every route and delivery is different. Send a service request or call us and we will provide a quote based on your pickup and delivery locations, timing, and volume.</p>
+        ${sectionHeading({ eyebrow: "FAQ", title: "Common questions about our courier services", id: "faq-title" })}
+        <dl class="faq-list">
+          ${SERVICE_FAQS.map((faq) => `<div class="faq-item"><dt>${esc(faq.question)}</dt><dd>${esc(faq.answer)}</dd></div>`).join("\n          ")}
+        </dl>
       </div>
     </section>
 ${ctaBand()}`
