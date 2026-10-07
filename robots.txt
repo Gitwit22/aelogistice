@@ -5,4 +5,4 @@ Allow: /
 # Reserved for the future employee/operations portal.
 Disallow: /portal/
 
-Sitemap: https://aelogistics.nxtlvlts.com/sitemap.xml
+Sitemap: https://aelogistics.us/sitemap.xml

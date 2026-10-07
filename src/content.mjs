@@ -7,7 +7,7 @@ export const BUSINESS = Object.freeze({
   name: "AE Logistics",
   legalName: "AE Logistics, LLC",
   brandName: "All Encompass Logistics",
-  siteUrl: "https://aelogistics.nxtlvlts.com",
+  siteUrl: "https://aelogistics.us",
   phone: "313-880-9792",
   email: "aelogisticsdet@gmail.com",
   serviceArea: "Detroit and Metro Detroit, Michigan",
