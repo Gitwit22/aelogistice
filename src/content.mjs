@@ -21,10 +21,13 @@ export const BUSINESS = Object.freeze({
 // These URLs are visible to visitors — never embed credentials. Each origin must also be
 // added to connect-src in _headers. An empty URL keeps the form from submitting and shows
 // the phone/email fallback instead of a false success message.
+// All three forms share one n8n workflow ("AE Logistics – Website Form Submissions"),
+// which routes on the payload's formType.
+const N8N_FORMS_WEBHOOK = "https://nxtlvl.app.n8n.cloud/webhook/ae-website-submissions";
 export const FORM_ENDPOINTS = Object.freeze({
-  serviceRequest: "",
-  contact: "",
-  courierApplication: ""
+  serviceRequest: N8N_FORMS_WEBHOOK,
+  contact: N8N_FORMS_WEBHOOK,
+  courierApplication: N8N_FORMS_WEBHOOK
 });
 
 export const NAV = [
