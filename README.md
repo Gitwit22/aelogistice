@@ -1,96 +1,105 @@
-# All Encompass Logistics, LLC
+# AE Logistics — Public Website
 
-A responsive, accessible single-page medical and specialty courier website for Detroit, Michigan, hosted at **https://aelogistics.nxtlvlts.com**. Plain HTML, CSS, and vanilla JavaScript; no npm, frameworks, dependencies, or build step.
+Public website for **AE Logistics, LLC** (All Encompass Logistics), a Detroit / Metro Detroit medical courier and business delivery company. Hosted on Cloudflare Pages at **https://aelogistics.nxtlvlts.com**.
 
-## Files and local preview
+Plain HTML, CSS, and vanilla JavaScript with **zero dependencies**. Pages are generated from shared content and layout by a small Node script, and the generated HTML is **committed**, so Cloudflare Pages still deploys the repository root with no build command.
 
-- `index.html`: semantic page structure, SEO metadata, and form.
-- `assets/css/styles.css`: mobile-first styling and reduced-motion support.
-- `assets/js/main.js`: business configuration, service/benefit arrays, structured data, navigation, and webhook submission.
-- `assets/img/`: supplied brand assets.
-- `_headers`: Cloudflare Pages response security headers.
+> The secure employee / operations portal is intentionally not built yet. The public site has no login link.
 
-Serve the repository root with any static HTTP server. For example, with Python installed: `python3 -m http.server 8080`, then visit `http://localhost:8080`. There is no existing test or lint infrastructure. Cloudflare's `_headers` rules apply on Pages, not the local Python server.
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `src/content.mjs` | **Edit here.** Business details, form webhook URLs, nav, services, industries, owners, testimonials, courier expectations. |
+| `src/layout.mjs` | Shared head, header, footer, CTA band, and form renderer. |
+| `src/pages/*.mjs` | One file per page (home, services, industries, about, safety-compliance, become-a-courier, request-service, contact, 404). |
+| `assets/js/forms.js` | Form schemas + validation + payload builder. Single source of truth used by the build, the browser, and tests. |
+| `assets/js/main.js` | Browser behavior: mobile nav, logo fallbacks, form submission. |
+| `assets/css/styles.css` | Mobile-first styles using the brand palette. |
+| `assets/img/` | Brand assets cropped from the supplied artwork (logos, badge, icons, van photo, OG image, favicon). |
+| `scripts/build.mjs` | Generator. Writes `index.html`, `*/index.html`, `404.html`, `sitemap.xml`, `robots.txt`. |
+| `tests/` | `node:test` suites for form validation and generated pages. |
+| `_headers` | Cloudflare Pages security headers (CSP). |
+
+Do not hand-edit generated HTML — edit `src/` and rebuild.
+
+## Commands (Node 22+)
+
+```sh
+npm run build   # regenerate HTML after editing src/ or assets/js/forms.js
+npm run check   # fail if committed HTML is stale
+npm test        # validation + page tests (includes the staleness check)
+npm run serve   # preview at http://localhost:8080 (Python)
+```
+
+Always run `npm run build && npm test` and commit the generated files together with source changes.
 
 ## Business configuration
 
-Edit the clearly labeled `BUSINESS_CONFIG` object at the very top of `assets/js/main.js`:
+In `src/content.mjs`:
 
-```js
-const BUSINESS_CONFIG = Object.freeze({
-  phone: "",
-  email: "",
-  serviceArea: "",
-  hours: "",
-  webhookUrl: ""
-});
-```
+- `BUSINESS` — name, legal name, phone, email, service area, `hours` (empty = hidden), taglines.
+- `OWNERS` — only approved bios. `photo` and `linkedin` stay hidden while empty.
+- `TESTIMONIALS` — only real, approved quotes. The home-page section is hidden while empty.
+- Do not add certifications, licenses, insurance levels, HIPAA/regulatory compliance claims, pricing, or physical addresses without explicit approval.
 
-Only enter verified details. All values start empty: empty phone/email/hours are hidden, and an empty service area hides its section and navigation link. For `serviceArea`, enter the verified coverage description (for example, “Detroit, Michigan and surrounding areas”). Hours are free-form display text. Phone should include a country/area code; email should be a valid business address. Contact links, fallback messages, and LocalBusiness JSON-LD use these same values and omit empty details.
+## Forms and webhooks
 
-Use a public **HTTPS** n8n webhook URL without embedded credentials. This URL is visible to visitors; never put secrets or private API credentials into the site. Add the webhook's exact origin to `connect-src` in `_headers`, at the marked configuration spot. For instance, a URL `https://YOUR-N8N-HOST/webhook/pickup` needs `connect-src 'self' https://YOUR-N8N-HOST;`. Do not enable broad wildcard origins.
+Three forms post to public HTTPS webhooks (e.g. n8n) configured in `FORM_ENDPOINTS`:
 
-Update the `SERVICES` array to add/remove services; cards and the service selector stay synchronized. Update `WHY_CHOOSE_US` for verified differentiators. Do not add certifications, licenses, insurance levels, HIPAA compliance, or other credential claims without verification.
+| Form | Page | Config key | Encoding |
+| --- | --- | --- | --- |
+| Service request | `/request-service/` | `serviceRequest` | `application/json` |
+| Contact / business inquiry | `/contact/` | `contact` | `application/json` |
+| Courier application | `/become-a-courier/` | `courierApplication` | `multipart/form-data` (optional `resume` file part) |
 
-## Logo files
+**While an endpoint is empty, that form does not submit.** It shows an error with the phone/email fallback instead of a false success message. The webhook URLs are visible to visitors — never embed credentials. Add each webhook's exact origin to `connect-src` in `_headers` (no wildcards).
 
-Add the supplied logo files, using these exact case-sensitive paths:
+### Payload contract
 
-- `assets/img/logo-primary.png`: hero and Open Graph image.
-- `assets/img/logo-badge.png`: navigation badge and favicon.
-- `assets/img/logo-horizontal.png`: footer.
+Every payload contains `formType` and `sourcePage`, plus **every** field from the form's schema in `assets/js/forms.js`, always as a string (`""` when empty; checkbox groups joined with `", "`). The honeypot field is never sent; honeypot submissions are silently discarded in the browser.
 
-Use optimized PNGs with transparent backgrounds, preferably with white/light artwork for the navy hero/footer and dark artwork for the white navigation. Missing in-page logos automatically give way to text branding; the favicon and social preview require the actual files. Provide a sufficiently large primary image for social sharing. No stock imagery is required.
-
-## Deploy to Cloudflare Pages
-
-1. In Cloudflare, open **Workers & Pages → Create → Pages → Connect to Git**.
-2. Connect this GitHub repository and select the production branch.
-3. Select **None** for framework preset, leave the **build command empty**, and set the **build output directory to `/`** (repository root).
-4. Deploy. Verify the generated `pages.dev` URL, security response headers, logo assets, mobile navigation, and a real form submission before launch.
-5. Future commits to the production branch publish automatically.
-
-### Custom domain
-
-1. In the Pages project, open **Custom domains → Set up a custom domain** and enter `aelogistics.nxtlvlts.com`. Register it in Pages before creating DNS records.
-2. At the DNS provider for `nxtlvlts.com`, add a **CNAME** with name **`aelogistics`** pointing to **the project's `pages.dev` address**, without `https://` or a path.
-3. Remove conflicting records for that subdomain, follow Cloudflare's validation instructions, and wait for DNS propagation and TLS issuance.
-4. Verify HTTPS at `https://aelogistics.nxtlvlts.com`. The canonical and Open Graph URLs already reference this domain.
-
-## Pickup form / n8n contract
-
-The browser sends `POST` with `Content-Type: application/json`. All nine keys are always present, all values are strings, and optional empty values are `""`:
+Service request example:
 
 ```json
 {
-  "name": "<requester's name>",
-  "company": "",
-  "email": "",
-  "phone": "",
-  "service": "Lab Specimen Transport",
-  "pickupLocation": "",
-  "deliveryLocation": "",
-  "preferredDateTime": "",
-  "message": "<delivery requirements without sensitive health information>"
+  "formType": "serviceRequest",
+  "sourcePage": "/request-service/",
+  "companyName": "", "contactName": "", "email": "", "phone": "",
+  "pickupAddress": "", "deliveryAddress": "",
+  "serviceType": "Medical Courier Services",
+  "deliveryType": "STAT",
+  "estimatedDeliveries": "", "requestedStartDate": "YYYY-MM-DD",
+  "notes": "", "preferredContactMethod": "Email"
 }
 ```
 
-`preferredDateTime`, when provided, uses the `datetime-local` value (usually `YYYY-MM-DDTHH:mm`), interpreted in the **pickup location's local time**, not UTC. `service` is the exact service name in `SERVICES`. The honeypot (`website`) is not included in the payload; filled honeypots are silently discarded before any request.
+Contact fields: `name, companyName, email, phone, inquiryType, message`.
+Courier fields: `name, email, phone, city, driversLicenseStatus, hasVehicle, vehicleYear, vehicleMakeModel, insuranceStatus, workInterest, availability, experience, notes` + optional file part `resume` (PDF/DOC/DOCX, ≤ 5 MB).
 
-Required: name, at least one of email/phone, service, and message. Supplied email must be valid and phone must contain digits. Maximum lengths: name 150, company 200, email 254, phone 50, locations 300 each, message 3000 characters. Revalidate all input server-side; browser validation and the honeypot are not security boundaries.
+Browser rules (see `forms.js`): required fields, email-or-phone for service/contact forms, preferred contact method must match a provided detail, option lists, max lengths, vehicle year range, resume type/size. **Browser validation is not a security boundary — revalidate everything server-side.**
 
-Configure n8n to:
+### What the webhook workflows must do
 
-- Accept unauthenticated public JSON POST requests at the production webhook URL.
-- Handle CORS preflight `OPTIONS` for `Content-Type: application/json`, allowing `POST` and the exact site origin `https://aelogistics.nxtlvlts.com` (and your `pages.dev` preview origin only when needed). Include `Access-Control-Allow-Origin` on actual responses, including errors. No cookies or credentials are sent.
-- Return a **2xx response only after accepting the request**. Response body is optional; the browser does not parse it. Return non-2xx on rejection. Avoid redirects.
-- Apply server-side validation, rate limiting/spam controls, safe handling of free-text input, and appropriate access controls/retention for collected contact data. Do not collect patient or medical-record data via this form.
+The website does not store submissions itself. Until the operations portal exists, each n8n workflow is responsible for:
 
-The form prevents double submits, times out after 20 seconds, and shows success only for a 2xx response. Failure preserves the entered data and shows configured phone/email fallback links. A timeout can occur after the server accepted the request; confirm receipt before retrying when appropriate. Empty/malformed webhook configuration never reports success. Entries reset only after confirmed success. Form data is never logged to the console or persisted to browser storage.
+1. Revalidating input (same rules + limits), rate limiting, and spam control.
+2. **Storing** the submission (e.g. n8n Data Table / database) — service requests and courier applications are review queues; applicants are never auto-approved.
+3. **Emailing a notification to `aelogisticsdet@gmail.com`** using credentials stored in n8n, never in this repo.
+4. For courier applications: validating the resume type/size again and storing the file privately.
+5. CORS: answer `OPTIONS` preflight for `POST` + `Content-Type` and include `Access-Control-Allow-Origin: https://aelogistics.nxtlvlts.com` on all responses (including errors). No cookies are sent.
+6. Returning **2xx only after the submission is stored**; non-2xx otherwise. Avoid redirects.
+
+The browser prevents double submits, times out after 20 s, keeps entries on failure, and resets the form only after a confirmed 2xx. A timeout can occur after the server accepted a request, so the error message tells users to check before resubmitting time-sensitive requests. Form data is never logged or stored in the browser.
+
+Deep links: `/request-service/?service=<service-slug>&type=<Scheduled|Recurring|Same-Day|STAT>` preselects the form.
+
+## Deploy to Cloudflare Pages
+
+Unchanged: framework preset **None**, **empty build command**, output directory **`/`**. Commits to the production branch publish automatically. Custom domain `aelogistics.nxtlvlts.com` is a CNAME to the project's `pages.dev` address. Cloudflare serves `404.html` for unknown paths.
 
 ### Launch checks
 
-- Fill the verified config and install all three logos.
-- Update CSP and n8n CORS together; inspect headers on the deployed site.
-- Test required-field errors, email-only and phone-only requests, a successful 2xx response, a non-2xx response, a network failure, and an empty webhook URL.
-- Confirm mobile menu keyboard operation, visible focus, no horizontal overflow, and service selector/card synchronization.
+- Configure webhook URLs + `_headers` CSP together; verify response headers on the deployed site.
+- Submit each form for real: success (2xx), rejection (non-2xx), and network failure; confirm the record is stored and the email arrives.
+- Check mobile navigation, keyboard focus, and no horizontal overflow.
