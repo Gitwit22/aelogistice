@@ -248,3 +248,12 @@ fieldset[aria-invalid="true"] legend { color: var(--danger); }
   html { scroll-behavior: auto; }
   .button { transition: none; }
 }
+
+/* Services FAQ & industry related links */
+.faq-list { margin: 0; display: grid; gap: 14px; }
+.faq-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; }
+.faq-item dt { font-family: Montserrat, Arial, sans-serif; font-weight: 700; font-size: 1.05rem; }
+.faq-item dd { margin: 8px 0 0; color: var(--muted); }
+.industry-card .related-link { margin: 14px 0 0; font-weight: 700; }
+.related-link a { color: var(--blue-text); text-decoration: none; }
+.related-link a:hover { text-decoration: underline; }

@@ -4,7 +4,8 @@ import { esc, pageHero, sectionHeading, renderForm } from "../layout.mjs";
 export const page = {
   path: "/become-a-courier/",
   title: "Become a Courier",
-  description: "Apply to drive with AE Logistics. We are looking for professional, reliable couriers in Detroit and Metro Detroit.",
+  seoTitle: "Become a Courier in Metro Detroit | AE Logistics",
+  description: "Apply to drive with AE Logistics. We are looking for professional, reliable medical and business couriers in Detroit and Metro Detroit, Michigan.",
   body: () => `
 ${pageHero({
   eyebrow: "Become a courier",

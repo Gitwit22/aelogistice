@@ -11,6 +11,7 @@ Plain HTML, CSS, and vanilla JavaScript with **zero dependencies**. Pages are ge
 | Path | Purpose |
 | --- | --- |
 | `src/content.mjs` | **Edit here.** Business details, form webhook URLs, nav, services, industries, owners, testimonials, courier expectations. |
+| `src/seo.mjs` | **SEO config.** Titles, social image, verification tokens, and JSON-LD structured data builders. |
 | `src/layout.mjs` | Shared head, header, footer, CTA band, and form renderer. |
 | `src/pages/*.mjs` | One file per page (home, services, industries, about, safety-compliance, become-a-courier, request-service, contact, 404). |
 | `assets/js/forms.js` | Form schemas + validation + payload builder. Single source of truth used by the build, the browser, and tests. |
@@ -93,6 +94,16 @@ The website does not store submissions itself. Until the operations portal exist
 The browser prevents double submits, times out after 20 s, keeps entries on failure, and resets the form only after a confirmed 2xx. A timeout can occur after the server accepted a request, so the error message tells users to check before resubmitting time-sensitive requests. Form data is never logged or stored in the browser.
 
 Deep links: `/request-service/?service=<service-slug>&type=<Scheduled|Recurring|Same-Day|STAT>` preselects the form.
+
+## SEO
+
+- **Metadata:** `src/seo.mjs` renders the title, description, robots tag, canonical link, Open Graph tags, and Twitter card tags for every page. A page can set `seoTitle` (otherwise `"<title> | AE Logistics"`), `schemaType` (`AboutPage`, `ContactPage`, …), and `schema(url)` for extra structured data.
+- **Structured data:** every page has a JSON-LD `@graph` with one shared `LocalBusiness` node and a `WebSite` node, plus `WebPage` + `BreadcrumbList` on inner pages. The Services page adds a `Service` node per service and `FAQPage` data mirroring the visible FAQ (`SERVICE_FAQS` in `content.mjs`). About adds the owners as `Person` nodes. Never add reviews, ratings, addresses, hours, prices, or certifications unless they are real and visible on the site.
+- **Sitemap / robots:** `npm run build` writes `sitemap.xml` (indexable pages only; any page with `noindex: true` is excluded) and `robots.txt` (allows the site, disallows the future `/portal/`, references the sitemap). robots.txt is not access control.
+- **Indexing protection (`_headers`):** `X-Robots-Tag: noindex` on repo files that Pages serves (`/src/`, `/scripts/`, `/tests/`, `README.md`, `package.json`, `/assets/js/`) and on all `*.pages.dev` hostnames, so only the custom domain is indexed.
+- **Search Console / Bing:** paste the verification token (the `content` value only) into `SEO.verification.google` / `SEO.verification.bing` in `src/seo.mjs`, rebuild, and deploy. Then submit `https://aelogistics.nxtlvlts.com/sitemap.xml` in each console.
+- **Analytics:** none is installed. If GA4 (or similar) is added later, load it from `renderPage` in `src/layout.mjs` and add its origins to the CSP `script-src`/`connect-src` in `_headers`.
+- `npm test` includes SEO regression tests (unique titles/descriptions, canonical/OG/Twitter tags, valid JSON-LD, sitemap/robots contents, image alt/dimensions).
 
 ## Deploy to Cloudflare Pages
 

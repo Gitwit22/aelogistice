@@ -1,5 +1,6 @@
 import { BUSINESS, OWNERS, WHY_CHOOSE_US } from "../content.mjs";
 import { esc, pageHero, ctaBand, sectionHeading } from "../layout.mjs";
+import { personNodes } from "../seo.mjs";
 
 const initials = (name) => name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
@@ -21,6 +22,9 @@ const ownerCard = (owner) => `
 export const page = {
   path: "/about/",
   title: "About Us",
+  seoTitle: "About AE Logistics | Locally Owned Detroit Courier Company",
+  schemaType: "AboutPage",
+  schema: () => personNodes(),
   description: "AE Logistics is a locally owned and operated Detroit courier company led by co-owners John Steele and Lavarr Hall.",
   body: () => `
 ${pageHero({

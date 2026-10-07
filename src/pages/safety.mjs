@@ -3,7 +3,7 @@ import { esc, pageHero, ctaBand, sectionHeading, button } from "../layout.mjs";
 // Describe practices only. Do not claim certifications, licenses, or regulatory
 // compliance (e.g. HIPAA, OSHA, DOT, IATA) unless the business has verified them.
 const PRACTICES = [
-  { title: "Documented handoffs", description: "Pickups and deliveries are documented so you know when a shipment changed hands and who received it." },
+  { title: "Documented handoffs", description: "Pickups and deliveries are documented so you know when a shipment changed hands and who received it — the foundation of chain of custody." },
   { title: "Your handling instructions", description: "Shipments are transported as packaged and labeled by the sender, following the handling and temperature instructions you provide." },
   { title: "Secure transport", description: "Shipments are secured in the vehicle and stay with the courier from pickup until delivery." },
   { title: "Clear communication", description: "Our team keeps you informed and reaches out promptly if a delay or exception occurs." },
@@ -16,6 +16,7 @@ const TECHNOLOGY = ["Dispatching and job assignment", "Barcode tracking", "Deliv
 export const page = {
   path: "/safety-compliance/",
   title: "Safety & Compliance",
+  seoTitle: "Safety, Handling & Chain-of-Custody Practices | AE Logistics Detroit",
   description: "How AE Logistics approaches careful handling, documented handoffs, communication, and accountability for medical and business deliveries in Metro Detroit.",
   body: () => `
 ${pageHero({

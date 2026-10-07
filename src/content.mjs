@@ -45,7 +45,7 @@ export const SERVICES = [
     slug: "medical-courier",
     name: "Medical Courier Services",
     summary: "Reliable, time-sensitive movement of medical materials for healthcare organizations.",
-    description: "Secure transportation designed for healthcare organizations that need dependable, time-sensitive movement of medical materials between locations.",
+    description: "Secure, time-sensitive healthcare logistics for Detroit-area organizations — moving lab materials, medical supplies and equipment, and pharmacy deliveries between the locations that depend on them.",
     points: ["Medical offices and clinics", "Laboratories and diagnostic facilities", "Dental offices", "Pharmacies", "Healthcare facilities"],
     pointsLabel: "Who we support"
   },
@@ -53,15 +53,15 @@ export const SERVICES = [
     slug: "specimen-transportation",
     name: "Specimen Transportation",
     summary: "Professional pickup and delivery of specimens between facilities and laboratories.",
-    description: "Professional pickup and delivery workflows for specimens traveling between medical facilities and laboratories, handled according to the instructions your team provides.",
-    points: ["Clinic-to-lab and facility-to-lab runs", "Documented pickup and delivery handoffs", "Handling and temperature instructions followed as provided", "Scheduled or on-demand pickups"],
+    description: "Professional clinic-to-lab specimen transport for medical facilities and laboratories across Metro Detroit, with documented handoffs and handling according to the instructions your team provides.",
+    points: ["Clinic-to-lab and facility-to-lab runs", "Documented chain-of-custody handoffs at pickup and delivery", "Handling and temperature instructions followed as provided", "Scheduled or on-demand pickups"],
     pointsLabel: "What to expect"
   },
   {
     slug: "stat-on-demand",
     name: "STAT / On-Demand Delivery",
     summary: "Priority pickup and direct delivery when a shipment can't wait.",
-    description: "Priority courier service for shipments that require rapid pickup and direct delivery — no unnecessary stops along the way.",
+    description: "Priority STAT courier service in Detroit and Metro Detroit for shipments that require rapid pickup and direct delivery — no unnecessary stops along the way.",
     points: ["Rapid dispatch", "Direct transportation", "Priority handling", "Status updates from pickup to delivery", "Delivery confirmation"],
     pointsLabel: "Highlights"
   },
@@ -69,7 +69,7 @@ export const SERVICES = [
     slug: "scheduled-routes",
     name: "Scheduled Routes",
     summary: "Recurring pickups and deliveries your team can plan around.",
-    description: "Recurring transportation for organizations that need predictable pickups and deliveries on a consistent schedule.",
+    description: "Scheduled courier routes for organizations that need predictable pickups and deliveries on a consistent schedule — from daily clinic-to-lab runs to multi-stop business routes.",
     points: ["Daily routes", "Weekly routes", "Multi-stop routes", "Clinic-to-lab routes", "Dedicated business routes"],
     pointsLabel: "Route options",
     cta: { label: "Request a Route Quote", deliveryType: "Recurring" }
@@ -90,6 +90,35 @@ export const SERVICES = [
     description: "Custom transportation arrangements for businesses that need recurring or dedicated courier capacity. We develop delivery workflows around your operational requirements — pickup windows, handoff procedures, and communication preferences.",
     points: ["Recurring or dedicated capacity", "Workflows designed around your operations", "A consistent point of contact", "Flexible scheduling as your needs change"],
     pointsLabel: "How it works for you"
+  }
+];
+
+// Visible on the Services page and mirrored in FAQPage structured data. Answers must stay
+// consistent with the rest of the site — do not add pricing, certifications, or guarantees.
+export const SERVICE_FAQS = [
+  {
+    question: "What areas does AE Logistics serve?",
+    answer: "We serve Detroit and the Metro Detroit area of Michigan. If your pickup or delivery is outside Metro Detroit, contact us and we will let you know what we can support."
+  },
+  {
+    question: "How do I request a STAT pickup?",
+    answer: `For an urgent STAT pickup, call ${BUSINESS.phone} so our team can respond immediately. For scheduled, recurring, or same-day requests, you can also use the online service request form.`
+  },
+  {
+    question: "Can you run recurring clinic-to-lab routes?",
+    answer: "Yes. Our Scheduled Routes service supports daily, weekly, and multi-stop routes, including clinic-to-lab specimen runs, built around your pickup windows."
+  },
+  {
+    question: "How do you handle temperature-sensitive or specially handled shipments?",
+    answer: "Shipments are transported as packaged and labeled by the sender, following the handling and temperature instructions you provide. Include your requirements in your request and we will confirm what we can support before service begins."
+  },
+  {
+    question: "How is pricing determined?",
+    answer: "Every route and delivery is different. We provide a quote based on your pickup and delivery locations, timing, and volume. Send a service request or call us to get started."
+  },
+  {
+    question: "Should I include patient information in my request?",
+    answer: "No. Please do not include patient names, medical record numbers, or other protected health information in website forms or email. Our team will coordinate shipment-specific details with you directly."
   }
 ];
 
@@ -115,36 +144,42 @@ export const WHY_CHOOSE_US = [
 export const INDUSTRIES = [
   {
     slug: "healthcare",
+    relatedService: "medical-courier",
     name: "Healthcare",
     summary: "Dependable transport between care locations.",
     description: "Healthcare organizations depend on materials arriving where they are needed, when they are needed. AE Logistics supports care teams with scheduled and on-demand transportation between facilities, following the handling instructions your organization provides."
   },
   {
     slug: "laboratories",
+    relatedService: "specimen-transportation",
     name: "Laboratories",
     summary: "Specimen pickups and lab routes on your schedule.",
     description: "We support laboratories with specimen pickups from client locations, recurring clinic-to-lab routes, and priority runs — with documented handoffs at pickup and delivery."
   },
   {
     slug: "medical-dental-offices",
+    relatedService: "scheduled-routes",
     name: "Medical & Dental Offices",
     summary: "Reliable runs that keep your office on schedule.",
     description: "Medical and dental offices can rely on AE Logistics for specimen runs, supply deliveries, and transfers between locations, so staff can stay focused on patients."
   },
   {
     slug: "pharmacies",
+    relatedService: "medical-courier",
     name: "Pharmacies",
     summary: "Local delivery support for pharmacy operations.",
     description: "We provide local delivery support for pharmacies, including transfers between locations and deliveries to the facilities they serve. Tell us about your handling requirements and we will review them with you before service begins."
   },
   {
     slug: "professional-businesses",
+    relatedService: "same-day-business",
     name: "Professional Businesses",
     summary: "Same-day delivery of documents and business materials.",
     description: "Law firms, offices, and professional services teams use same-day courier service for documents, supplies, and time-sensitive business materials across Metro Detroit."
   },
   {
     slug: "scheduled-transportation",
+    relatedService: "scheduled-routes",
     name: "Organizations Requiring Scheduled Transportation",
     summary: "Predictable recurring routes, built around you.",
     description: "Any organization that moves items on a regular schedule can benefit from a dedicated or recurring route. We work with you to set pickup windows, stops, and communication that fit your operation."

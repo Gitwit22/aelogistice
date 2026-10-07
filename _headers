@@ -7,3 +7,28 @@
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self'; connect-src 'self' https://nxtlvl.app.n8n.cloud; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests
+
+# SEO / INDEXING: repository source files are publicly served by Pages but are not
+# website content — keep them out of search results.
+/src/*
+  X-Robots-Tag: noindex, nofollow
+/scripts/*
+  X-Robots-Tag: noindex, nofollow
+/tests/*
+  X-Robots-Tag: noindex, nofollow
+/README.md
+  X-Robots-Tag: noindex, nofollow
+/package.json
+  X-Robots-Tag: noindex, nofollow
+/assets/js/*
+  X-Robots-Tag: noindex
+
+# Never index the *.pages.dev production or preview hostnames (duplicate content).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# Brand images change rarely; let browsers cache them for a week.
+/assets/img/*
+  Cache-Control: public, max-age=604800

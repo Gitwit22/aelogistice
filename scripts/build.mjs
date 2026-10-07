@@ -32,7 +32,17 @@ export async function buildOutputs() {
   }
   const urls = pages.filter((page) => !page.noindex).map((page) => `  <url><loc>${BUSINESS.siteUrl}${page.path}</loc></url>`);
   outputs.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
-  outputs.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BUSINESS.siteUrl}/sitemap.xml\n`);
+  outputs.set("robots.txt", [
+    "# Public marketing pages are crawlable. robots.txt is not access control —",
+    "# private areas must be protected by authentication.",
+    "User-agent: *",
+    "Allow: /",
+    "# Reserved for the future employee/operations portal.",
+    "Disallow: /portal/",
+    "",
+    `Sitemap: ${BUSINESS.siteUrl}/sitemap.xml`,
+    ""
+  ].join("\n"));
   return outputs;
 }
 
