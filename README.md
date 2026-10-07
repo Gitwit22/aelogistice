@@ -1,6 +1,6 @@
 # AE Logistics — Public Website
 
-Public website for **AE Logistics, LLC** (All Encompass Logistics), a Detroit / Metro Detroit medical courier and business delivery company. Hosted on Cloudflare Pages at **https://aelogistics.nxtlvlts.com**.
+Public website for **AE Logistics, LLC** (All Encompass Logistics), a Detroit / Metro Detroit medical courier and business delivery company. Hosted on Cloudflare Pages at **https://aelogistics.us**.
 
 Plain HTML, CSS, and vanilla JavaScript with **zero dependencies**. Pages are generated from shared content and layout by a small Node script, and the generated HTML is **committed**, so Cloudflare Pages still deploys the repository root with no build command.
 
@@ -88,7 +88,7 @@ The website does not store submissions itself. Until the operations portal exist
 2. **Storing** the submission (e.g. n8n Data Table / database) — service requests and courier applications are review queues; applicants are never auto-approved.
 3. **Emailing a notification to `aelogisticsdet@gmail.com`** using credentials stored in n8n, never in this repo.
 4. For courier applications: validating the resume type/size again and storing the file privately.
-5. CORS: answer `OPTIONS` preflight for `POST` + `Content-Type` and include `Access-Control-Allow-Origin: https://aelogistics.nxtlvlts.com` on all responses (including errors). No cookies are sent.
+5. CORS: answer `OPTIONS` preflight for `POST` + `Content-Type` and include `Access-Control-Allow-Origin` for `https://aelogistics.us` and `https://www.aelogistics.us` on all responses (including errors). No cookies are sent.
 6. Returning **2xx only after the submission is stored**; non-2xx otherwise. Avoid redirects.
 
 The browser prevents double submits, times out after 20 s, keeps entries on failure, and resets the form only after a confirmed 2xx. A timeout can occur after the server accepted a request, so the error message tells users to check before resubmitting time-sensitive requests. Form data is never logged or stored in the browser.
@@ -101,13 +101,13 @@ Deep links: `/request-service/?service=<service-slug>&type=<Scheduled|Recurring|
 - **Structured data:** every page has a JSON-LD `@graph` with one shared `LocalBusiness` node and a `WebSite` node, plus `WebPage` + `BreadcrumbList` on inner pages. The Services page adds a `Service` node per service and `FAQPage` data mirroring the visible FAQ (`SERVICE_FAQS` in `content.mjs`). About adds the owners as `Person` nodes. Never add reviews, ratings, addresses, hours, prices, or certifications unless they are real and visible on the site.
 - **Sitemap / robots:** `npm run build` writes `sitemap.xml` (indexable pages only; any page with `noindex: true` is excluded) and `robots.txt` (allows the site, disallows the future `/portal/`, references the sitemap). robots.txt is not access control.
 - **Indexing protection (`_headers`):** `X-Robots-Tag: noindex` on repo files that Pages serves (`/src/`, `/scripts/`, `/tests/`, `README.md`, `package.json`, `/assets/js/`) and on all `*.pages.dev` hostnames, so only the custom domain is indexed.
-- **Search Console / Bing:** paste the verification token (the `content` value only) into `SEO.verification.google` / `SEO.verification.bing` in `src/seo.mjs`, rebuild, and deploy. Then submit `https://aelogistics.nxtlvlts.com/sitemap.xml` in each console.
+- **Search Console / Bing:** paste the verification token (the `content` value only) into `SEO.verification.google` / `SEO.verification.bing` in `src/seo.mjs`, rebuild, and deploy. Then submit `https://aelogistics.us/sitemap.xml` in each console.
 - **Analytics:** none is installed. If GA4 (or similar) is added later, load it from `renderPage` in `src/layout.mjs` and add its origins to the CSP `script-src`/`connect-src` in `_headers`.
 - `npm test` includes SEO regression tests (unique titles/descriptions, canonical/OG/Twitter tags, valid JSON-LD, sitemap/robots contents, image alt/dimensions).
 
 ## Deploy to Cloudflare Pages
 
-Unchanged: framework preset **None**, **empty build command**, output directory **`/`**. Commits to the production branch publish automatically. Custom domain `aelogistics.nxtlvlts.com` is a CNAME to the project's `pages.dev` address. Cloudflare serves `404.html` for unknown paths.
+Unchanged: framework preset **None**, **empty build command**, output directory **`/`**. Commits to the production branch publish automatically. Custom domain: `aelogistics.us` (canonical; redirect `www.aelogistics.us` to it). Cloudflare serves `404.html` for unknown paths.
 
 ### Launch checks
 
