@@ -1,6 +1,6 @@
 # WEBHOOK CSP CONFIGURATION: add the exact HTTPS n8n origin after 'self' in
 # connect-src below, e.g. https://YOUR-N8N-HOST. Never add a wildcard.
-# Keep this origin in sync with BUSINESS_CONFIG.webhookUrl in assets/js/main.js.
+# Keep these origins in sync with FORM_ENDPOINTS in src/content.mjs (all three forms).
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
