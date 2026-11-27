@@ -76,9 +76,9 @@ Service request example:
 ```
 
 Contact fields: `name, companyName, email, phone, inquiryType, message`.
-Courier fields: `name, email, phone, city, driversLicenseStatus, hasVehicle, vehicleYear, vehicleMakeModel, insuranceStatus, workInterest, availability, experience, notes` + optional file part `resume` (PDF/DOC/DOCX, ≤ 5 MB).
+Courier fields: `name, email, phone, city, driversLicenseStatus, hasVehicle, vehicleYear, vehicleMakeModel, vehicleTypes, hasDrivers, driverCount, insuranceStatus, workInterest, availability, experience, notes` + optional file part `resume` (PDF/DOC/DOCX, ≤ 5 MB).
 
-Browser rules (see `forms.js`): required fields, email-or-phone for service/contact forms, preferred contact method must match a provided detail, option lists, max lengths, vehicle year range, resume type/size. **Browser validation is not a security boundary — revalidate everything server-side.**
+Browser rules (see `forms.js`): required fields, email-or-phone for service/contact forms, preferred contact method must match a provided detail, option lists, max lengths, vehicle year range, driver count (1–500, required only when `hasDrivers` is "Yes, I have drivers working under me"), resume type/size. **Browser validation is not a security boundary — revalidate everything server-side.**
 
 ### What the webhook workflows must do
 
