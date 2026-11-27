@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { FORMS, validateForm, buildPayload, validateResume, RESUME_RULES } from "../assets/js/forms.js";
+import { FORMS, validateForm, buildPayload, validateResume, RESUME_RULES, HAS_DRIVERS_YES } from "../assets/js/forms.js";
 
 const SERVICES = ["Medical Courier Services", "Other / not sure"];
 
@@ -55,6 +55,7 @@ test("courier application requires availability and validates vehicle year", () 
   const values = {
     name: "Sam Driver", email: "sam@example.com", phone: "313-555-0101", city: "Detroit",
     driversLicenseStatus: "Valid driver's license", hasVehicle: "Yes", vehicleYear: "1850", vehicleMakeModel: "",
+    vehicleTypes: [], hasDrivers: "No, just me", driverCount: "",
     insuranceStatus: "Currently insured", workInterest: "Either", availability: [], experience: "", resume: null, notes: ""
   };
   const errors = validateForm(FORMS.courierApplication, values);
@@ -62,6 +63,29 @@ test("courier application requires availability and validates vehicle year", () 
   assert.ok(errors.vehicleYear);
   assert.deepEqual(validateForm(FORMS.courierApplication, { ...values, availability: ["Weekends"], vehicleYear: "2019" }), {});
   assert.ok(validateForm(FORMS.courierApplication, { ...values, availability: ["Never"], vehicleYear: "2019" }).availability);
+});
+
+test("courier application captures vehicle types and drivers under the applicant", () => {
+  const values = {
+    name: "Pat Fleet", email: "pat@example.com", phone: "313-555-0102", city: "Detroit",
+    driversLicenseStatus: "Valid driver's license", hasVehicle: "Yes", vehicleYear: "", vehicleMakeModel: "",
+    vehicleTypes: ["Box truck", "Sprinter / high-roof van"], hasDrivers: HAS_DRIVERS_YES, driverCount: "",
+    insuranceStatus: "Currently insured", workInterest: "Either", availability: ["Weekends"], experience: "", resume: null, notes: ""
+  };
+  // Driver count is required only when the applicant says they have drivers.
+  assert.ok(validateForm(FORMS.courierApplication, values).driverCount);
+  assert.deepEqual(validateForm(FORMS.courierApplication, { ...values, driverCount: "4" }), {});
+  assert.deepEqual(validateForm(FORMS.courierApplication, { ...values, hasDrivers: "No, just me" }), {});
+  assert.match(validateForm(FORMS.courierApplication, { ...values, driverCount: "0" }).driverCount, /whole number between 1 and 500/);
+  assert.ok(validateForm(FORMS.courierApplication, { ...values, driverCount: "2.5" }).driverCount);
+  assert.ok(validateForm(FORMS.courierApplication, { ...values, hasDrivers: "" }).hasDrivers);
+  assert.ok(validateForm(FORMS.courierApplication, { ...values, vehicleTypes: ["Helicopter"], driverCount: "4" }).vehicleTypes);
+  assert.match(validateForm(FORMS.courierApplication, { ...values, vehicleYear: "1850", driverCount: "4" }).vehicleYear, /year between/);
+
+  const payload = buildPayload("courierApplication", FORMS.courierApplication, { ...values, driverCount: "4" }, "/become-a-courier/");
+  assert.equal(payload.vehicleTypes, "Box truck, Sprinter / high-roof van");
+  assert.equal(payload.hasDrivers, HAS_DRIVERS_YES);
+  assert.equal(payload.driverCount, "4");
 });
 
 test("resume validation checks extension, MIME type, size, and empty files", () => {

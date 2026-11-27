@@ -6,6 +6,9 @@
 export const DELIVERY_TYPES = ["Scheduled", "Recurring", "Same-Day", "STAT"];
 export const CONTACT_METHODS = ["Email", "Phone", "Either"];
 
+// Lets fleet operators / owners with drivers identify themselves on the courier application.
+export const HAS_DRIVERS_YES = "Yes, I have drivers working under me";
+
 export const RESUME_RULES = Object.freeze({
   maxBytes: 5 * 1024 * 1024,
   extensions: [".pdf", ".doc", ".docx"],
@@ -20,7 +23,9 @@ export const RESUME_RULES = Object.freeze({
  * Field options:
  *   type      text | email | tel | date | number | select | textarea | checkboxes | file
  *   required  boolean
+ *   requiredIf { field, value } — required only when another field has exactly that value
  *   max       maximum string length (or max number for type "number")
+ *   rangeNoun noun used in the number range error, e.g. "a year" (default "a whole number")
  *   options   fixed option list; "services" means the select is filled from site content
  *   full      span both grid columns
  */
@@ -71,8 +76,11 @@ export const FORMS = Object.freeze({
       { name: "city", label: "City", type: "text", required: true, max: 100, autocomplete: "address-level2" },
       { name: "driversLicenseStatus", label: "Driver's license status", type: "select", required: true, options: ["Valid driver's license", "License with restrictions", "No valid driver's license"] },
       { name: "hasVehicle", label: "Do you have a reliable vehicle?", type: "select", required: true, options: ["Yes", "No"] },
-      { name: "vehicleYear", label: "Vehicle year", type: "number", min: 1980, max: 2100 },
+      { name: "vehicleYear", label: "Vehicle year", type: "number", min: 1980, max: 2100, rangeNoun: "a year" },
       { name: "vehicleMakeModel", label: "Vehicle make / model", type: "text", max: 120 },
+      { name: "vehicleTypes", label: "Vehicle type(s)", type: "checkboxes", options: ["Car / sedan", "SUV / minivan", "Pickup truck", "Cargo van", "Sprinter / high-roof van", "Box truck", "Other"], full: true, hint: "Select all that apply, including vehicles your drivers use." },
+      { name: "hasDrivers", label: "Do you have drivers working under you?", type: "select", required: true, options: ["No, just me", HAS_DRIVERS_YES] },
+      { name: "driverCount", label: "If yes, how many drivers?", type: "number", min: 1, max: 500, requiredIf: { field: "hasDrivers", value: HAS_DRIVERS_YES } },
       { name: "insuranceStatus", label: "Auto insurance status", type: "select", required: true, options: ["Currently insured", "Not currently insured"] },
       { name: "workInterest", label: "Interested in", type: "select", required: true, options: ["Employee", "Independent contractor", "Either"] },
       { name: "availability", label: "Availability", type: "checkboxes", required: true, options: ["Weekday mornings", "Weekday afternoons", "Weekday evenings", "Weekends", "On-call / STAT"], full: true },
@@ -123,13 +131,14 @@ export function validateForm(form, values, optionSets = {}) {
       continue;
     }
     const text = typeof value === "string" ? value : "";
+    const required = field.required || (field.requiredIf && values[field.requiredIf.field] === field.requiredIf.value);
     if (!text) {
-      if (field.required) errors[field.name] = field.type === "select" ? `Select ${field.label.toLowerCase()}.` : `Enter ${field.label.toLowerCase()}.`;
+      if (required) errors[field.name] = field.type === "select" ? `Select ${field.label.toLowerCase()}.` : `Enter ${field.label.toLowerCase()}.`;
       continue;
     }
     if (field.type === "number") {
       const number = Number(text);
-      if (!Number.isInteger(number) || number < field.min || number > field.max) errors[field.name] = `Enter a year between ${field.min} and ${field.max}.`;
+      if (!Number.isInteger(number) || number < field.min || number > field.max) errors[field.name] = `Enter ${field.rangeNoun || "a whole number"} between ${field.min} and ${field.max}.`;
       continue;
     }
     if (field.max && text.length > field.max) {

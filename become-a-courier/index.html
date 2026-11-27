@@ -140,6 +140,27 @@
               <input id="courierApplication-vehicleMakeModel" name="vehicleMakeModel" aria-describedby="courierApplication-vehicleMakeModel-error" type="text" maxlength="120">
               <span class="field-error" id="courierApplication-vehicleMakeModel-error"></span>
             </div>
+            <fieldset class="field full-width checkbox-group" id="courierApplication-vehicleTypes" aria-describedby="courierApplication-vehicleTypes-hint courierApplication-vehicleTypes-error">
+              <legend>Vehicle type(s)</legend>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Car / sedan" id="courierApplication-vehicleTypes-0"> Car / sedan</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="SUV / minivan" id="courierApplication-vehicleTypes-1"> SUV / minivan</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Pickup truck" id="courierApplication-vehicleTypes-2"> Pickup truck</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Cargo van" id="courierApplication-vehicleTypes-3"> Cargo van</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Sprinter / high-roof van" id="courierApplication-vehicleTypes-4"> Sprinter / high-roof van</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Box truck" id="courierApplication-vehicleTypes-5"> Box truck</label>
+              <label class="check"><input type="checkbox" name="vehicleTypes" value="Other" id="courierApplication-vehicleTypes-6"> Other</label>
+              <span class="field-help" id="courierApplication-vehicleTypes-hint">Select all that apply, including vehicles your drivers use.</span><span class="field-error" id="courierApplication-vehicleTypes-error"></span>
+            </fieldset>
+            <div class="field">
+              <label for="courierApplication-hasDrivers">Do you have drivers working under you? *</label>
+              <select id="courierApplication-hasDrivers" name="hasDrivers" aria-describedby="courierApplication-hasDrivers-error" required><option value="">Select…</option><option value="No, just me">No, just me</option><option value="Yes, I have drivers working under me">Yes, I have drivers working under me</option></select>
+              <span class="field-error" id="courierApplication-hasDrivers-error"></span>
+            </div>
+            <div class="field">
+              <label for="courierApplication-driverCount">If yes, how many drivers?</label>
+              <input id="courierApplication-driverCount" name="driverCount" aria-describedby="courierApplication-driverCount-error" type="number" inputmode="numeric" min="1" max="500" step="1">
+              <span class="field-error" id="courierApplication-driverCount-error"></span>
+            </div>
             <div class="field">
               <label for="courierApplication-insuranceStatus">Auto insurance status *</label>
               <select id="courierApplication-insuranceStatus" name="insuranceStatus" aria-describedby="courierApplication-insuranceStatus-error" required><option value="">Select…</option><option value="Currently insured">Currently insured</option><option value="Not currently insured">Not currently insured</option></select>
